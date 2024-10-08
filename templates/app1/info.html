@@ -1,0 +1,31 @@
+{% extends 'app1/base.html' %}
+
+{% block content %}
+
+<h3 class="alert alert-warning text-center">Employee Records</h3>
+<table class="table my-5">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Salary</th>
+        <th scope="col">Scale</th>
+        <th scope="col">Country</th>
+        <th scope="col">City</th>
+      </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <th scope="row">{{ employee.id }}</th>
+        <td>{{ employee.name }}</td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee_detail.salary }}</td>
+        <td>{{ employee_detail.scale }}</td>
+        <td>{{ employee_detail.country }}</td>
+        <td>{{ employee_detail.city }}</td>
+    </tr>
+    </tbody>
+</table>
+        <a href="{% url 'homepage' %}" class="btn btn-primary"> Back to Home</a>
+{% endblock content %}

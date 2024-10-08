@@ -1,0 +1,39 @@
+{% include "app1/home.html" %}
+<div class="main" style="margin-top:40px;">
+    <h3 style="padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px; background-color: #FFF4AE; border-color: #ffeeba; text-align: center;">
+        Category
+    </h3>
+    <br>
+    <button style="margin-left:85%; background-color: #a3dfb1; border: 1px solid #28a745; padding: .375rem .75rem; line-height: 1.5; border-radius: .25rem; transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out; cursor: pointer;">
+        <a href={% url 'categoryadd'%} style="text-decoration: none; color: inherit;">Add Category</a>
+    </button>
+
+    <table class="product-table" style="width: 100%; margin: 3rem 0; border-collapse: collapse;">
+        <thead style="background-color: #343a40; color: white;">
+            <tr>
+                <th scope="col" style="padding: .75rem; text-align: left; border-bottom: 2px solid #dee2e6;">Title</th>
+                <th scope="col" style="padding: .75rem; text-align: left; border-bottom: 2px solid #dee2e6;">Detail</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in data1 %}
+            <tr>
+                <td>{{ product.title }}</td>
+                <td>{{ product.detail }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center; padding: 1rem;">No products found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+<style>
+    .product-table th,
+    .product-table td {
+        font-size: 1.0rem; /* Adjust this value to make text smaller */
+    }
+</style>
+

@@ -1,0 +1,240 @@
+{% load static %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" />
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 20px;
+        font-family: 'Arial', sans-serif;
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .product-title {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #2c3e50;
+        font-size: 28px;
+        font-weight: bold;
+        color: #2c3e50;
+    }
+
+    .product-container {
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-start;
+    }
+
+    .product-image {
+        flex: 1;
+        min-width: 250px;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .product-image img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .product-image img:hover {
+        transform: scale(1.05);
+    }
+
+    .product-details {
+        flex: 2;
+        min-width: 300px;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .product-details p {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    .product-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    .product-table th,
+    .product-table td {
+        text-align: left;
+        border: 1px solid #ddd;
+        padding: 12px;
+    }
+
+    .product-table th {
+        background-color: #ecf0f1;
+    }
+
+    .color-btn {
+        width: 35px;
+        height: 35px;
+        margin-right: 8px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .add-to-cart-btn {
+        align-items: center;
+        justify-content: center;
+        padding: 12px 24px;
+        background-color: #3498db;
+        border-radius: 8px;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        text-align: center;
+    }
+
+    .add-to-cart-btn:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+    }
+
+    .review-section {
+        margin-top: 40px;
+    }
+
+    .card {
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+
+    .card-body {
+        padding: 20px;
+    }
+
+    .rating i {
+        color: #f39c12; /* Yellow color for filled stars */
+        font-size: 1.5rem; /* Adjust star size */
+    }
+
+    .rating i.text-muted {
+        color: #ddd; /* Gray color for empty stars */
+    }
+
+    .review-images img {
+        max-width: 120px; /* Adjust size as needed */
+        height: auto;
+        margin: 5px; /* Space between images */
+        border-radius: 5px; /* Rounded corners */
+    }
+
+    /* Responsive design for mobile */
+    @media (max-width: 768px) {
+        .product-container {
+            flex-direction: column;
+        }
+
+        .product-image,
+        .product-details {
+            width: 100%;
+        }
+    }
+</style>
+
+<main class="container">
+    <h3 class="product-title">{{ data.p_name }}</h3>
+    <div class="product-container">
+        <div class="product-image">
+            {% if data.images.all %}
+                {% for image in data.images.all %}
+                    <img src="{{ image.image.url }}" alt="Product Image">
+                {% endfor %}
+            {% else %}
+                <p>No images available for this product.</p>
+            {% endif %}
+        </div>
+        <div class="product-details">
+            <p>{{ data.p_name }}</p>
+            <hr/>
+            <table class="product-table">
+                <tr>
+                    <th>Colors</th>
+                    <td>
+                        <button class="color-btn" style="background-color:{{ data.color }};"></button>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Price per Unit</th>
+                    <td>Rs: {{ data.price }}</td>
+                </tr>
+                <tr>
+                    <th>Owner ID</th>
+                    <td>{{data.user}}</td>
+                </tr>
+            </table>
+            <hr/>
+            <div class="add-to-cart-section">
+                <form method="POST" action="{% url 'add_to_cart' %}">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" min="1" value="1" class="form-control" style="padding: 8px; width: 60px; border-radius: 5px; border: 1px solid #ddd;">
+                    <input name="product_id" type="hidden" value="{{ data.id }}">
+                    <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+                </form>
+            </div>
+        </div>
+        <!-- Reviews Section -->
+        <div class="review-section">
+            <h4 class="text-center mb-4" style="font-family: 'Arial', sans-serif; color: #333;">Customer Reviews</h4>
+            {% if reviews %}
+                {% for review in reviews %}
+                <div class="card mb-3 shadow-sm" style="border-radius: 10px;">
+                    <div class="card-body" style="padding: 20px;">
+                        <footer class="d-flex flex-column align-items-center">
+                            <h2 class="text-muted mb-2" style="font-weight: 600;">Reviewed by <span style="font-weight: bold; color: #007bff;">{{ review.user.username|capfirst }}</span></h2>
+                            <div class="rating mt-2" style="font-size: 1.5em;">
+                                {% for star in "12345" %}
+                                    {% if forloop.counter <= review.review_rating %}
+                                        <i style="color: gold;" class="fa fa-star"></i>
+                                    {% else %}
+                                        <i style="color: lightgray;" class="fa fa-star"></i> <!-- For empty stars -->
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <h3 class="card-text mt-3" style="font-style: italic; color: #555;">“{{ review.review_text }}”</h3>
+                        </footer>
+                        {% if review.images %}
+                            <div class="d-flex flex-wrap justify-content-center mt-3 review-images">
+                                {% for image_url in review.images %}
+                                <img src="{{ image_url }}" alt="Review Image" style="max-width: 100px; margin: 5px; border-radius: 8px; border: 2px solid #f0f0f0;">
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center text-muted" style="font-style: italic;">No reviews yet. Be the first to review this product!</p>
+            {% endif %}
+        </div> 
+    </div>
+</main>

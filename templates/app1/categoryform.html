@@ -1,0 +1,26 @@
+{% include "app1/home.html" %}
+<div class="main" style="margin-top:40px;">
+    <form method="POST"  style="background-color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        {% csrf_token %}  
+        <h3 style=" padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px; background-color: #FFF4AE; border-color: #ffeeba; text-align: center;">
+            Add Category
+        </h3>
+        
+        {% if error %}
+            <div style="color: red; margin-bottom: 20px;">
+                {{ error }}
+            </div>
+        {% endif %}
+        
+        <label for="title" style="color: #555;">Title:</label>
+        <input type="text" id="title" name="title" required style="width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 5px;">
+          
+        <label for="details" style="color: #555;">Small Details:</label>
+        <textarea id="details" name="details" required style="width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+        
+        <input type="submit" value="Add" style="background-color: #5cb85c; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
+    </form>
+</div>
+</body>
+</html>
+

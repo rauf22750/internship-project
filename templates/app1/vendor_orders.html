@@ -1,0 +1,129 @@
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Vendor Orders</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .main {
+            margin: 40px auto;
+            padding: 20px;
+            max-width: 1200px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        h3 {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            background-color: #FFF4AE;
+            border: 1px solid #ffeeba;
+            text-align: center;
+            font-size: 24px;
+        }
+        .product-table {
+            width: 100%;
+            margin: 2rem 0;
+            border-collapse: collapse;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+        }
+        .product-table thead {
+            background-color: #343a40;
+            color: white;
+        }
+        .product-table th, .product-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 2px solid #dee2e6;
+        }
+        .product-table th {
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-weight: 600;
+        }
+        .product-table tbody tr {
+            background-color: #fff;
+            transition: background-color 0.2s ease;
+        }
+        .product-table tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+        .product-table tbody tr td {
+            vertical-align: middle;
+        }
+        select {
+            padding: 0.5rem;
+            border-radius: 4px;
+            border: 1px solid #ced4da;
+            background-color: #fff;
+            font-size: 1rem;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    {% include "app1/home.html" %}
+    <div class="main">
+        <h3>Orders for Your Products</h3>
+        <table class="product-table">
+            <thead>
+                <tr>
+                    <th scope="col">Order ID</th>
+                    <th scope="col">Customer Name</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    {% for item in order.items.all %}
+                        {% if item.product.user == request.user %}
+                            <tr>
+                                <td>{{ order.id }}</td>
+                                <td>{{ order.user.username }}</td>
+                                <td>{{ item.product.p_name }}</td>
+                                <td>Rs:{{ item.total_price }}</td>
+                                <td>{{ item.get_order_status_display }}</td>
+                                <td>
+                                    <form method="POST" action="{% url 'update_item_status' item.id %}">
+                                        {% csrf_token %}
+                                        <select name="order_status">
+                                            <option value="process" {% if item.order_status == 'process' %}selected{% endif %}>In Process</option>
+                                            <option value="shipped" {% if item.order_status == 'shipped' %}selected{% endif %}>Shipped</option>
+                                            <option value="delivered" {% if item.order_status == 'delivered' %}selected{% endif %}>Delivered</option>
+                                        </select>
+                                        <button type="submit">Update</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>        
+    </div>
+</body>
+</html>

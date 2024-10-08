@@ -1,0 +1,71 @@
+{% include "app1/home.html" %}
+<div class="main" style="margin-top:40px;">
+    <form method="POST"  enctype="multipart/form-data" style="background-color: #fff; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        {% csrf_token %}  
+        <h3 style=" padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px; background-color: #FFF4AE; border-color: #ffeeba; text-align: center;">
+            Add product
+        </h3>
+        
+        <label for="productname" style="color: #555;">Product Name:</label>
+        <input type="text" id="productname" name="productname" required style="width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 5px;">
+        
+        <label for="picture" style="color: #555;">Pictures:</label>
+        <input type="file" id="picture" multiple name="pictures[]" accept="image/*" style="width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 5px;" onchange="previewImages()">
+
+        <label for="color" style="color: #555;">Color:</label>
+        <input type="text" id="color" name="color" required style="width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 5px;">
+        
+        <label for="price" style="color: #555;">Price:</label>
+        <input type="text" id="price" name="price" required style="width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 5px;">
+        
+        <label for="details" style="color: #555;">Small Details:</label>
+        <textarea id="details" name="details" required style="width: 100%; padding: 10px; margin: 10px 0 20px 0; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+        
+        <input type="submit" value="Add" style="background-color: #5cb85c; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%;">
+    </form>
+</div>
+</body>
+</html>
+<script>
+    function previewImages() {
+        var preview = document.getElementById('imagePreview');
+        var files = document.getElementById('picture').files;
+        
+        if (files.length > 8) {
+            alert('You can only upload a maximum of 8 images.');
+            document.getElementById('picture').value = ''; // Clear the input
+            preview.innerHTML = ''; // Clear the preview
+            return;
+        }
+        
+        preview.innerHTML = '';
+        
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            
+            if (file.type.match('image.*')) {
+                var reader = new FileReader();
+                
+                reader.onload = (function(file) {
+                    return function(e) {
+                        var div = document.createElement('div');
+                        div.style.display = 'inline-block';
+                        div.style.position = 'relative';
+                        div.style.marginRight = '10px';
+                        
+                        var img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.style.borderRadius = '50%';
+                        img.style.width = '100px';
+                        img.style.height = 'auto';
+                        
+                        div.appendChild(img);
+                        preview.appendChild(div);
+                    };
+                })(file);
+                
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+</script>
